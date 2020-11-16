@@ -1,0 +1,14 @@
+{
+  "name": "334322693eb6d30f",
+  "main": "334322693eb6d30f@257.js",
+  "version": "257.0.0",
+  "homepage": "https://observablehq.com/d/334322693eb6d30f",
+  "author": {
+    "name": "Patrick Liu",
+    "url": "https://observablehq.com/@patrickliu2000"
+  },
+  "type": "module",
+  "peerDependencies": {
+    "@observablehq/runtime": "4"
+  }
+}

@@ -2,12 +2,12 @@ import define1 from "./a33468b95d0b15b0@698.js";
 
 export default function define(runtime, observer) {
   const main = runtime.module();
-  const fileAttachments = new Map([["unemployment-x.csv",new URL("./files/8a6057f29caa4e010854bfc31984511e074ff9042ec2a99f30924984821414fbaeb75e59654e9303db359dfa0c1052534691dac86017c4c2f992d23b874f9b6e",import.meta.url)],["counties-albers-10m.json",new URL("./files/6b1776f5a0a0e76e6428805c0074a8f262e3f34b1b50944da27903e014b409958dc29b03a1c9cc331949d6a2a404c19dfd0d9d36d9c32274e6ffbc07c11350ee",import.meta.url)]]);
+  const fileAttachments = new Map([["counties-albers-10m.json",new URL("./files/6b1776f5a0a0e76e6428805c0074a8f262e3f34b1b50944da27903e014b409958dc29b03a1c9cc331949d6a2a404c19dfd0d9d36d9c32274e6ffbc07c11350ee",import.meta.url)],["classifications@7.csv",new URL("./files/49bdd0ca31dd32fe69cdee47ca428d95bdce8a391633acfa5643046d9a887f0aa04fa5984815f6b6f0e921de97ea14f91dc3e60be6e84ffbe3a95ec6a6c4479a",import.meta.url)]]);
   main.builtin("FileAttachment", runtime.fileAttachments(name => fileAttachments.get(name)));
   main.variable(observer()).define(["md"], function(md){return(
-md`# Heat Map
+md`# Mental Health Resource Classification
 
-Mental Health Centers Heat Map Data: Test Data (Unemployment)`
+Classified from (0-9), Higher value = poor mental health resource availability`
 )});
   main.variable(observer("chart")).define("chart", ["d3","legend","color","data","topojson","us","path","states","format"], function(d3,legend,color,data,topojson,us,path,states,format)
 {
@@ -39,16 +39,16 @@ ${format(data.get(d.id))}`);
 }
 );
   main.variable(observer("data")).define("data", ["d3","FileAttachment"], async function(d3,FileAttachment){return(
-Object.assign(new Map(d3.csvParse(await FileAttachment("unemployment-x.csv").text(), ({id, rate}) => [id, +rate])), {title: "Mental Health Centers"})
+Object.assign(new Map(d3.csvParse(await FileAttachment("classifications@7.csv").text(), ({id, classification}) => [id, classification])), {title: "Mental Health Resource Allocation"})
 )});
   main.variable(observer("color")).define("color", ["d3"], function(d3){return(
-d3.scaleQuantize([1, 10], d3.schemeBlues[9])
+d3.scaleQuantize([0, 9], d3.schemeBlues[9])
 )});
   main.variable(observer("path")).define("path", ["d3"], function(d3){return(
 d3.geoPath()
 )});
   main.variable(observer("format")).define("format", function(){return(
-d => `${d}%`
+d => `${d}/9`
 )});
   main.variable(observer("states")).define("states", ["us"], function(us){return(
 new Map(us.objects.states.geometries.map(d => [d.id, d.properties]))

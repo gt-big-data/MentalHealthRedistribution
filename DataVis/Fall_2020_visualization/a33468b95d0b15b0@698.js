@@ -62,7 +62,7 @@ legend({
   main.variable(observer()).define(["legend","d3"], function(legend,d3){return(
 legend({
   color: d3.scaleQuantize([1, 10], d3.schemePurples[9]),
-  title: "Mental Health Centers"
+  title: "Unemployment rate (%)"
 })
 )});
   main.variable(observer()).define(["legend","d3"], function(legend,d3){return(
@@ -75,7 +75,7 @@ legend({
   main.variable(observer()).define(["legend","d3"], function(legend,d3){return(
 legend({
   color: d3.scaleThreshold([2.5, 3.1, 3.5, 3.9, 6, 7, 8, 9.5], d3.schemeRdBu[9]),
-  title: "Mental Health Centers",
+  title: "Unemployment rate (%)",
   tickSize: 0
 })
 )});
@@ -112,7 +112,7 @@ function legend({
   color,
   title,
   tickSize = 6,
-  width = 320,
+  width = 320, 
   height = 44 + tickSize,
   marginTop = 18,
   marginRight = 0,
