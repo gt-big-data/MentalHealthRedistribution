@@ -21,3 +21,7 @@ https://gtvault.sharepoint.com/:w:/s/BigDataBigImpact/EeEBFu8Tf_hGqnFwBCWhpgABHK
     - Aayush Seth 
     - Jesse Chen 
     - Kritik Acharya 
+# Running the Visualization
+1. Make sure your terminal is in the `DataVis/Fall_2020_visualization` folder
+2. Run `python -m http.server`
+3. Access `localhost:8000` in your browser!

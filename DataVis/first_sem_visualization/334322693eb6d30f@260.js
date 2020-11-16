@@ -7,7 +7,16 @@ export default function define(runtime, observer) {
   main.variable(observer()).define(["md"], function(md){return(
 md`# Mental Health Resource Classification
 
-Classified from (0-9), Higher value = poor mental health resource availability`
+## Overview
+- Counties are classified from (0-9), Higher value = poor mental health resource availability
+  - classified based on historical statistics from lots of metrics, including self-harm drug/alcohol abuse just to name a few.
+
+## Extensions/Next Steps
+- Unsupervised approach: Use neural networks to predict optimal locations for new mental health centers based on these classifications as well as location of current mental health centers
+
+## Resources/Source Code
+- https://docs.google.com/document/d/150Hc7q6I4S-W8EjiD32tP6UhliiDqbFmeJZ3ZjDodmI/edit?usp=sharing
+- https://github.com/gt-big-data/MentalHealthRedistribution`
 )});
   main.variable(observer("chart")).define("chart", ["d3","legend","color","data","topojson","us","path","states","format"], function(d3,legend,color,data,topojson,us,path,states,format)
 {
