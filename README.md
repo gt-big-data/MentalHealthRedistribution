@@ -1,7 +1,7 @@
 # Mental Health Redistribution
 - GT Big Data Big Impact Fall 2020 Project
 ## Design Doc and Project Overview:
-https://gtvault.sharepoint.com/:w:/s/BigDataBigImpact/EeEBFu8Tf_hGqnFwBCWhpgABHKpwlXb9iAUghttHlA4SXg?e=RdoPKb
+https://gtvault.sharepoint.com/:w:/s/BigDataBigImpact/EY6vpVRpPFJCkFRCd9M_lZIB4fX2rYmK2x9LA8m1vKwRqQ?e=shtuta
 ## Members
 - Analysis Project Lead: Patrick Liu
 - Data Visualization Lead: Tushna Eduljee
@@ -11,7 +11,6 @@ https://gtvault.sharepoint.com/:w:/s/BigDataBigImpact/EeEBFu8Tf_hGqnFwBCWhpgABHK
     - Vishnu Suresh 
     - Matthew Li 
     - Jasmine Li 
-    - Tanishq Sandhu (Contributor) 
 - Data Vis Team:
     - Rachel Daniel  
     - Yash Patel  
