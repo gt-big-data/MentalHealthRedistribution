@@ -12,7 +12,7 @@ md`# Mental Health Resource Classification
   - classified based on historical statistics from lots of metrics, including self-harm drug/alcohol abuse just to name a few.
 
 ## Extensions/Next Steps
-- Unsupervised approach: Use neural networks to predict optimal locations for new mental health centers based on these classifications as well as location of current mental health centers
+- Deep learning approach: Use neural networks to predict optimal locations for new mental health centers based on these classifications as well as location of current mental health centers
 
 ## Resources/Source Code
 - https://docs.google.com/document/d/150Hc7q6I4S-W8EjiD32tP6UhliiDqbFmeJZ3ZjDodmI/edit?usp=sharing
