@@ -1,0 +1,53 @@
+,Rank,State,Percentage,Number
+0,01          ,District of Columbia          ,2.5          ,3000          
+1,02          ,Vermont          ,3.9          ,4000          
+2,03          ,Massachusetts          ,4.2          ,51000          
+3,04          ,Connecticut          ,4.6          ,25000          
+4,05          ,Kentucky          ,4.8          ,37000          
+5,06          ,New York          ,5.1          ,139000          
+6,07          ,Rhode Island          ,5.8          ,11000          
+7,08          ,Pennsylvania          ,6          ,108000          
+8,09          ,Michigan          ,6.4          ,93000          
+9,10          ,New Mexico          ,6.4          ,19000          
+10,11          ,Hawaii          ,6.4          ,12000          
+11,12          ,Delaware          ,6.8          ,10000          
+12,13          ,Maryland          ,7          ,55000          
+13,14          ,Ohio          ,7.1          ,138000          
+14,15          ,Minnesota          ,7.3          ,58000          
+15,16          ,Wisconsin          ,7.4          ,62000          
+16,17          ,New Hampshire          ,7.5          ,17000          
+17,18          ,California          ,7.8          ,434000          
+18,19          ,South Dakota          ,8.2          ,9000          
+19,20          ,West Virginia          ,8.3          ,31000          
+20,21          ,Iowa          ,8.4          ,39000          
+21,22          ,New Jersey          ,8.8          ,94000          
+22,23          ,North Dakota          ,8.8          ,9000          
+23,24          ,Illinois          ,8.9          ,151000          
+24,25          ,Colorado          ,9          ,84000          
+25,26          ,Oregon          ,9          ,67000          
+26,27          ,Arizona          ,9.6          ,97000          
+27,28          ,Louisiana          ,9.7          ,72000          
+28,29          ,Nebraska          ,10.3          ,25000          
+29,30          ,Montana          ,10.3          ,17000          
+30,31          ,Nevada          ,10.5          ,51000          
+31,32          ,Washington          ,10.6          ,140000          
+32,33          ,Arkansas          ,10.9          ,51000          
+33,34          ,Indiana          ,11.4          ,134000          
+34,35          ,Alaska          ,11.6          ,12000          
+35,36          ,Utah          ,11.7          ,67000          
+36,37          ,Kansas          ,12.4          ,52000          
+37,38          ,South Carolina          ,12.5          ,85000          
+38,39          ,Maine          ,12.7          ,29000          
+39,40          ,Virginia          ,13.5          ,147000          
+40,41          ,Idaho          ,13.7          ,46000          
+41,42          ,North Carolina          ,13.8          ,204000          
+42,43          ,Oklahoma          ,15.9          ,92000          
+43,44          ,Missouri          ,16.2          ,169000          
+44,45          ,Florida          ,17.4          ,503000          
+45,46          ,Georgia          ,18.5          ,255000          
+46,47          ,Alabama          ,18.8          ,154000          
+47,48          ,Tennessee          ,19          ,171000          
+48,49          ,Texas          ,20.1          ,664000          
+49,50          ,Mississippi          ,22.2          ,95000          
+50,51          ,Wyoming          ,23          ,21000          
+51,52          ,National          ,10.8          ,"511,400          "
