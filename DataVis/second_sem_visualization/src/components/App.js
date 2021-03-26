@@ -28,16 +28,15 @@ class App extends Component {
   }
 
   drawLegend() {
-    var quantize = d3
-      .scaleQuantize()
-      .domain([0, 0.15])
-      .range(
-        d3.range(9).map(function (i) {
-          return 'q' + i + '-9';
-        })
-      );
+    const color = d3.scaleQuantize([0, 9], d3.schemeBlues[9]);
+    // var quantize = d3
+    //   .scaleLinear()
+    //   .domain([0, 9])
+    //   .range(
+    //     [, 'rgb(71, 187, 94)']
+    //   );
 
-    var svg = d3.select('svg');
+    var svg = d3.select('#legend');
 
     svg
       .append('g')
@@ -46,11 +45,14 @@ class App extends Component {
 
     var legend = d3Legend
       .legendColor()
-      .labelFormat(d3.format('.2f'))
-      .useClass(true)
-      .title('A really really really really really long title')
+      // .labelFormat()
+      // .useClass(true)
+      .title('Legend')
       .titleWidth(100)
-      .scale(quantize);
+      .cells(10)
+      .shapeWidth(40)
+      .orient('vertical')
+      .scale(color);
 
     svg.select('.legendQuant').call(legend);
   }
@@ -142,7 +144,7 @@ class App extends Component {
             </Link>
           </ListItem>
         </UnorderedList>
-        <svg id="legend"></svg>
+        <svg id="legend" style={{ height: 230 }}></svg>
         <svg id="map" style={{ width: 1000, height: 600, marginBottom: 30 }}></svg>
         {/* <ComposableMap>
           <Geographies geography={data}>
