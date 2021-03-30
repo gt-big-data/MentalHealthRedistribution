@@ -1,9 +1,12 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
-import { Heading, ListItem, UnorderedList, Flex, Link } from '@chakra-ui/react';
+import { Heading, ListItem, UnorderedList, Flex, Link, Box, Input, Button, InputRightElement, InputGroup } from '@chakra-ui/react';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 import d3Legend from 'd3-svg-legend';
 import * as d3 from 'd3';
 import { feature, mesh } from 'topojson-client';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 // import {
 //   ComposableMap,
 //   Geographies,
@@ -79,7 +82,7 @@ class App extends Component {
       .attr('fill', d => color(this.state.classificationData.get(d.id)))
       .attr('d', path)
       .append('title')
-      .text(d => `${d.properties.name}, ${this.state.stateData.get(d.id.slice(0, 2)).name}\n${this.state.classificationData.get(d.id)}`);
+      .text(d => `${d.properties.name}, ${this.state.stateData.get(d.id.slice(0, 2)).name}\n${parseInt(this.state.classificationData.get(d.id)) + 1}`);
 
     svg
       .append('path')
@@ -92,68 +95,20 @@ class App extends Component {
 
   render() {
     return (
-      <Flex w="60%" direction="column" mx="auto">
-        <Heading as="h1" fontSize="32px">
-          Mental Health Resource Classification
-        </Heading>
-        <Heading as="h2" fontSize="24px">
-          Overview
-        </Heading>
-        <UnorderedList ml={10}>
-          <ListItem>
-            Counties are classified from (0-9), Higher value = poor mental
-            health resource availability
-          </ListItem>
-          <ListItem>
-            Classified based on historical statistics from lots of metrics,
-            including self-harm drug/alcohol abuse just to name a few.
-          </ListItem>
-        </UnorderedList>
-        <Heading as="h2" fontSize="24px">
-          Extension/Next Steps
-        </Heading>
-        <UnorderedList ml={10}>
-          <ListItem>
-            Unsupervised approach: Use neural networks to predict optimal
-            locations for new mental health centers based on these
-            classifications as well as location of current mental health centers
-          </ListItem>
-        </UnorderedList>
-        <Heading as="h2" fontSize="24px">
-          Resources/Source Code
-        </Heading>
-        <UnorderedList ml={10}>
-          <ListItem>
-            <Link
-              href="https://docs.google.com/document/d/150Hc7q6I4S-W8EjiD32tP6UhliiDqbFmeJZ3ZjDodmI/edit?usp=sharing"
-              color="teal.500"
-              isExternal
-            >
-              Project Proposal
-              <ExternalLinkIcon mx="2px" />
-            </Link>
-          </ListItem>
-          <ListItem>
-            <Link
-              href="https://github.com/gt-big-data/MentalHealthRedistribution"
-              color="teal.500"
-              isExternal
-            >
-              GitHub Repository
-              <ExternalLinkIcon mx="2px" />
-            </Link>
-          </ListItem>
-        </UnorderedList>
-        <svg id="legend" style={{ height: 230 }}></svg>
-        <svg id="map" style={{ width: 1000, height: 600, marginBottom: 30 }}></svg>
-        {/* <ComposableMap>
-          <Geographies geography={data}>
-            {({geographies}) => geographies.map(geo =>
-              <Geography key={geo.rsmKey} geography={geo} />
-            )}
-          </Geographies>
-        </ComposableMap> */}
-      </Flex>
+      <Box backgroundColor='#EBF3FF' height='100%'>
+        <Flex w='60%' direction='column' mx='auto'>
+          <InputGroup mt={5}>
+            <Input placeholder='Search by County' borderRadius={50} backgroundColor='#fff' borderWidth={0} boxShadow='0px 4px 10px rgba(106, 166, 255, 0.4)' />
+            <InputRightElement width="6rem">
+              <Button borderRadius={50} width='6rem' backgroundColor='#6AA6FF'>
+                <FontAwesomeIcon icon={faSearch} color='#fff' />
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+          {/* <svg id="legend" style={{ height: 230 }}></svg> */}
+          <svg id="map" style={{ width: 1000, height: 600, marginBottom: 30 }}></svg>
+        </Flex>
+      </Box>
     );
   }
 }
