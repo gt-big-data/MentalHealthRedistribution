@@ -95,7 +95,7 @@ class App extends Component {
 
   render() {
     return (
-      <Box backgroundColor='#EBF3FF' height='100%'>
+      <Box backgroundColor='#EBF3FF' height='100vh'>
         <Flex w='60%' direction='column' mx='auto'>
           <InputGroup mt={5}>
             <Input placeholder='Search by County' borderRadius={50} backgroundColor='#fff' borderWidth={0} boxShadow='0px 4px 10px rgba(106, 166, 255, 0.4)' />
