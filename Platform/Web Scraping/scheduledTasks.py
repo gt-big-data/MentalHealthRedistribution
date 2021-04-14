@@ -8,7 +8,7 @@ import os.path as path
 import json
 
 firebase_credentials_path =  path.abspath(path.join(__file__ ,"../../.."))
-firebase_credentials_path += "/mental-health-redistribution-firebase-adminsdk-j3xlw-b31f34af10.json"
+firebase_credentials_path += "/mental-health-redistribution-firebase-adminsdk-j3xlw-a8e9757a35.json"
 
 cred = credentials.Certificate(firebase_credentials_path)
 firebase_admin.initialize_app(cred)
