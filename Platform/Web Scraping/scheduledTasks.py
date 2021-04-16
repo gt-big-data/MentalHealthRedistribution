@@ -12,6 +12,7 @@ from scraper import scrape
 from geocoder import get_lat_long
 from optimalCenter import optimal_center_formula
 #county.csv
+#county_coords.csv
 
 
 firebase_credentials_path =  path.abspath(path.join(__file__ ,"../../.."))
@@ -27,6 +28,16 @@ with open('county.csv', mode='r') as csv_file:
     csv_reader = csv.DictReader(csv_file)
     for row in csv_reader:
     	county_dictionary[row["Location"]] = row
+
+county_coords = {}
+with open('county_coords.csv', mode='r') as csv_file:
+    csv_reader = csv.DictReader(csv_file)
+    for row in csv_reader:
+    	identifier = row["COUNAME"] + " County, " + row["STNAME"]
+    	county_coords[identifier] = {}
+    	county_coords[identifier]["lat"] = row["LATITUDE"]
+    	county_coords[identifier]["lon"] = row["LONGITUDE"]
+    	#county_dictionary[row[""]] = row
 
 def store_scraped_in_google(address, name, lat, lon):
 	doc_ref = db.collection(u'potentialLocations').document(name)
@@ -101,29 +112,21 @@ def county_info():
 def optimal_centers():
 	county_list = request.args.getlist('counties')
 	response = {}
-	for county in county_list:
-		potential_locations = db.collection(u'potentialLocations').where(u'lat', u'!=', 0).stream()
-		county_lat = 43 #placeholder
-		county_lon = -75.234213443 #placeholder
-		county_classification = float(county_dictionary[county]["Mental Health Need Classification"])
-		optimal_center = None
-		max_optimality = 0
-		name = ""
-		for doc in potential_locations:
-			potential_lat = float(doc.to_dict()["lat"])
-			potential_lon = float(doc.to_dict()["lon"])
-			optimality = optimal_center_formula(county_lat, county_lon, potential_lat, potential_lon, county_classification)
-			if (optimality > max_optimality):
-				optimal_center = doc.to_dict()
-				max_optimality = optimality
-				name = doc.id
-		response[county] = optimal_center
-		response[county]["name"] = name
+	potential_locations = db.collection(u'potentialLocations').where(u'lat', u'!=', 0).stream()
+	for doc in potential_locations:
+		potential_lat = float(doc.to_dict()["lat"])
+		potential_lon = float(doc.to_dict()["lon"])
+		score = 0
+		for county in county_list:
+			county_lat = float(county_coords[county]["lat"])
+			county_lon = float(county_coords[county]["lon"])
+			county_classification = float(county_dictionary[county]["Mental Health Need Classification"])
+			score += optimal_center_formula(county_lat, county_lon, potential_lat, potential_lon, county_classification)
+		score = score/len(county_list)
+		response[str(doc.id)] = {}
+		response[str(doc.id)]["details"] = doc.to_dict()
+		response[str(doc.id)]["score"] = score
 	return json.dumps(response)
 
 if __name__ == "__main__":
 	app.run()
-
-
-
-
