@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { Component, useContext, useEffect, useState } from 'react';
-import { Heading, ListItem, UnorderedList, Flex, Link, Box, Input, Button, InputRightElement, InputGroup } from '@chakra-ui/react';
+import { Heading, ListItem, UnorderedList, Flex, Link, Box, Input, Button, InputRightElement, InputGroup, Spinner, Center } from '@chakra-ui/react';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 import d3Legend from 'd3-svg-legend';
 import * as d3 from 'd3';
@@ -15,6 +15,7 @@ import axios from 'axios';
 // } from 'react-simple-maps';
 
 import Sidebar from './Sidebar';
+import CountyListSidebar from './CountyListSidebar';
 
 import countyData from '../data/us.json';
 import geojsonData from '../data/usGeojson.json';
@@ -29,10 +30,13 @@ class App extends Component {
       classificationData: new Map(),
       stateData: new Map(),
       selectedCounty: [],
+      selectedCounties: [],
       potentialMentalCenters: [],
       currMentalCenters: []
     };
     this.setSelectedCounty = this.setSelectedCounty.bind(this);
+    this.setSelectedCounties = this.setSelectedCounties.bind(this);
+    this.addToSelectedCounties = this.addToSelectedCounties.bind(this);
   }
 
   async componentDidMount() {
@@ -48,6 +52,18 @@ class App extends Component {
 
   setSelectedCounty(county) {
     this.setState({selectedCounty: county});
+  }
+
+  setSelectedCounties(counties) {
+    this.setState({selectedCounties: counties});
+  }
+
+  addToSelectedCounties(county) {
+    let counties = this.state.selectedCounties;
+    if (!counties.includes(county)) {
+      counties.push(county);
+    }
+    this.setState({selectedCounties: counties});
   }
 
   drawLegend() {
@@ -181,16 +197,17 @@ class App extends Component {
   }
 
   render() {
-    const {selectedCounty} = this.state;
-    const {setSelectedCounty} = this;
+    const {selectedCounty, selectedCounties} = this.state;
+    const {setSelectedCounty, setSelectedCounties, addToSelectedCounties} = this;
 
     return (
-      <CountyContext.Provider value={{selectedCounty, setSelectedCounty}}>
+      <CountyContext.Provider value={{selectedCounty, setSelectedCounty, selectedCounties, setSelectedCounties, addToSelectedCounties}}>
         <Flex w='100vw' h='100vh' backgroundColor='#ebf3ff' direction='column'>
           <Searchbar />
           {/* <svg id="legend" style={{ height: 230 }}></svg> */}
-          <svg id="map" style={{ width: '100vw', height: '100vh', marginBottom: 30 }}></svg>
+          {this.state.potentialMentalCenters.length === 0 && this.state.currMentalCenters.length === 0 ? <Spinner position='absolute' top='50%' left='50%' transform='translate(-50%, -50%)' size='xl' color="#6AA6FF"/> : <svg id="map" style={{ width: '100vw', height: '100vh', marginBottom: 30 }}></svg>}
           <Sidebar />
+          <CountyListSidebar />
         </Flex>
       </CountyContext.Provider>
     );

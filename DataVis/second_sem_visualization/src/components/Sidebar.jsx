@@ -6,7 +6,7 @@ import { CountyContext } from '../contexts';
 
 const Sidebar = () => {
   // eslint-disable-next-line no-unused-vars
-  const { selectedCounty, setSelectedCounty } = useContext(CountyContext);
+  const { selectedCounty, setSelectedCounty, addToSelectedCounties } = useContext(CountyContext);
 
   return (
     <Fade in={selectedCounty.length > 0}>
@@ -15,6 +15,9 @@ const Sidebar = () => {
           <>
             <Heading>{`${selectedCounty[0].properties.name} County`}</Heading>
             <Text>{selectedCounty[0].index}</Text>
+            <Button position='absolute' bottom='60px' w='80%' left='50%' transform='translateX(-50%)' backgroundColor='#6AA6FF' color='#fff' onClick={() => {addToSelectedCounties(selectedCounty[0]);}}>
+              Add to List
+            </Button>
             <Button position='absolute' bottom='5' mx='auto' left='50%' transform='translateX(-50%)' variant='unstyled' onClick={() => {setSelectedCounty([]);}} >
               <CloseIcon/>
             </Button>
