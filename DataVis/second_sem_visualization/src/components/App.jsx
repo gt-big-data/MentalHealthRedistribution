@@ -37,6 +37,7 @@ class App extends Component {
     this.setSelectedCounty = this.setSelectedCounty.bind(this);
     this.setSelectedCounties = this.setSelectedCounties.bind(this);
     this.addToSelectedCounties = this.addToSelectedCounties.bind(this);
+    this.removeFromSelectedCounties = this.removeFromSelectedCounties.bind(this);
   }
 
   async componentDidMount() {
@@ -64,6 +65,12 @@ class App extends Component {
       counties.push(county);
     }
     this.setState({selectedCounties: counties});
+  }
+
+  removeFromSelectedCounties(county) {
+    let counties = this.state.selectedCounties;
+    counties.splice(counties.indexOf(county), 1);
+    this.setState({ selectedCounties: counties });
   }
 
   drawLegend() {
@@ -198,10 +205,10 @@ class App extends Component {
 
   render() {
     const {selectedCounty, selectedCounties} = this.state;
-    const {setSelectedCounty, setSelectedCounties, addToSelectedCounties} = this;
+    const {setSelectedCounty, setSelectedCounties, addToSelectedCounties, removeFromSelectedCounties } = this;
 
     return (
-      <CountyContext.Provider value={{selectedCounty, setSelectedCounty, selectedCounties, setSelectedCounties, addToSelectedCounties}}>
+      <CountyContext.Provider value={{selectedCounty, setSelectedCounty, selectedCounties, setSelectedCounties, addToSelectedCounties, removeFromSelectedCounties }}>
         <Flex w='100vw' h='100vh' backgroundColor='#ebf3ff' direction='column'>
           <Searchbar />
           {/* <svg id="legend" style={{ height: 230 }}></svg> */}
