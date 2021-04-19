@@ -17,6 +17,7 @@ import axios from 'axios';
 import Sidebar from './Sidebar';
 
 import countyData from '../data/us.json';
+import geojsonData from '../data/usGeojson.json';
 import csvData from '../data/data.csv';
 import Searchbar from './Searchbar';
 import { CountyContext } from '../contexts';
@@ -28,20 +29,21 @@ class App extends Component {
       classificationData: new Map(),
       stateData: new Map(),
       selectedCounty: [],
-      mentalCenters: []
+      potentialMentalCenters: [],
+      currMentalCenters: []
     };
     this.setSelectedCounty = this.setSelectedCounty.bind(this);
   }
 
   async componentDidMount() {
     const getData = async () => {
-      const data = await axios.get('http://127.0.0.1:5000/potential_mental_health_centers');
-      this.setState({mentalCenters: data.data});
+      const currData = await axios.get('http://127.0.0.1:5000/current_mental_health_centers');
+      const potentialData = await axios.get('http://127.0.0.1:5000/potential_mental_health_centers');
+      this.setState({potentialMentalCenters: potentialData.data, currMentalCenters: currData.data});
     };
     await getData();
     // drawLegend();
     this.drawMap();
-    console.log(this.state.mentalCenters);
   }
 
   setSelectedCounty(county) {
@@ -82,14 +84,35 @@ class App extends Component {
     const csv = await d3.csv(csvData);
     const mapData = new Map(csv.map(({id, classification}) => [id, classification]));
     const states = new Map(countyData.objects.states.geometries.map(d => [d.id, d.properties]));
-    console.log(mapData);
     this.setState({classificationData: mapData});
     this.setState({stateData: states});
   }
 
+  scale(scaleFactor, offsetX, offsetY) {
+    return d3.geoTransform({
+      point: function(x, y) {
+        this.stream.point(offsetX + x * scaleFactor, offsetY + y  * scaleFactor);
+      }
+    });
+  }
+
   async drawMap() {
+    let width = 960;
+    let height = 500;
+
+    // let zoom = d3.zoom().on('zoom', (event) => {
+    //   svg.style('stroke-width', 1.5 / event.transform.k + 'px');
+    //   // g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")"); // not in d3 v4
+    //   svg.attr('transform', event.transform); // updated for d3 v4
+    // });
+
     const svg = d3.select('#map');
-    const path = d3.geoPath();
+    var projection = d3
+      .geoAlbersUsa()
+      .scale(1300)
+      .translate([487.5, 305]);
+
+    const path = d3.geoPath().projection(this.scale(1, 225, 30));
 
     const color = d3.scaleQuantize([0, 8], d3.schemeBlues[9]);
 
@@ -112,17 +135,6 @@ class App extends Component {
       .append('title')
       .text(d => `${d.properties.name}, ${this.state.stateData.get(d.id.slice(0, 2)).name}\n${parseInt(this.state.classificationData.get(d.id)) + 1}`);
     
-    // svg
-    //   .selectAll('.center')
-    //   .data(this.state.mentalCenters)
-    //   .enter().append('circle')
-    //   .style('stroke', 'gray')
-    //   .style('fill', 'red')
-    //   .attr('height', 10000)
-    //   .attr('width', 10000)
-    //   .attr('x', 21)
-    //   .attr('y', -150);
-
     svg
       .append('path')
       .datum(mesh(countyData, countyData.objects.states, (a, b) => a !== b))
@@ -130,6 +142,42 @@ class App extends Component {
       .attr('stroke', 'white')
       .attr('stroke-linejoin', 'round')
       .attr('d', path);
+
+    svg
+      .selectAll('.curr')
+      .data(this.state.currMentalCenters)
+      .enter()
+      .append('circle')
+      .style('stroke', '#bfd6ff')
+      .style('fill', '#669cff')
+      .attr('r', 3)
+      .attr('d', path)
+      .attr('cx', (d) => {
+        if (projection([d.lon, d.lat]) !== null) {
+          return projection([d.lon, d.lat])[0] + 225;
+        }
+      })
+      .attr('cy', (d) => {
+        if (projection([d.lon, d.lat]) !== null) {
+          return projection([d.lon, d.lat])[1] + 30;
+        }
+      });
+    
+    svg
+      .selectAll('.potential')
+      .data(this.state.potentialMentalCenters)
+      .enter()
+      .append('circle')
+      .style('stroke', '#ffdfba')
+      .style('fill', '#ffad4f')
+      .attr('r', 3)
+      .attr('d', path)
+      .attr('cx', (d) => {
+        return projection([d.lon, d.lat])[0] + 225;
+      })
+      .attr('cy', (d) => {
+        return projection([d.lon, d.lat])[1] + 30;
+      });
   }
 
   render() {
@@ -138,14 +186,12 @@ class App extends Component {
 
     return (
       <CountyContext.Provider value={{selectedCounty, setSelectedCounty}}>
-        <Box backgroundColor='#EBF3FF' height='100vh'>
-          <Flex w='60%' direction='column' mx='auto'>
-            <Searchbar />
-            {/* <svg id="legend" style={{ height: 230 }}></svg> */}
-            <svg id="map" style={{ width: 1000, height: 600, marginBottom: 30 }}></svg>
-            <Sidebar />
-          </Flex>
-        </Box>
+        <Flex w='100vw' h='100vh' backgroundColor='#ebf3ff' direction='column'>
+          <Searchbar />
+          {/* <svg id="legend" style={{ height: 230 }}></svg> */}
+          <svg id="map" style={{ width: '100vw', height: '100vh', marginBottom: 30 }}></svg>
+          <Sidebar />
+        </Flex>
       </CountyContext.Provider>
     );
   }
