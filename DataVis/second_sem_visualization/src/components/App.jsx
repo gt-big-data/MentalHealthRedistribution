@@ -23,6 +23,8 @@ import csvData from '../data/data.csv';
 import Searchbar from './Searchbar';
 import { CountyContext } from '../contexts';
 
+const url = 'http://mental-health-redistribution.uc.r.appspot.com';
+
 class App extends Component {
   constructor() {
     super();
@@ -42,8 +44,8 @@ class App extends Component {
 
   async componentDidMount() {
     const getData = async () => {
-      const currData = await axios.get('http://127.0.0.1:5000/current_mental_health_centers');
-      const potentialData = await axios.get('http://127.0.0.1:5000/potential_mental_health_centers');
+      const currData = await axios.get(`${url}/current_mental_health_centers`);
+      const potentialData = await axios.get(`${url}/potential_mental_health_centers`);
       this.setState({potentialMentalCenters: potentialData.data, currMentalCenters: currData.data});
     };
     await getData();
