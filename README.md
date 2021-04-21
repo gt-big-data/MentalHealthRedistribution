@@ -24,3 +24,16 @@ https://gtvault.sharepoint.com/:w:/s/BigDataBigImpact/EY6vpVRpPFJCkFRCd9M_lZIB4f
     - Jesse Chen (Fall '20, Spring '21)
     - Kritik Acharya (Fall '20, Spring '21)
     - Steven Leone (Spring '21)
+
+## Running the Flask API Locally
+- simply change directories until you are in the `flask_app` folder
+- run `python3 main.py`!
+### Accessing Deployed API
+- the current API is deployed on `mental-health-redistribution.uc.r.appspot.com`, and current endpoints it supports are
+    - `/potential_mental_health_centers`: returns potential mental health center location's name, address, city, state, latitude/longitude
+    - `/current_mental_health_centers`: returns current mental health center's name, address, city, state, latitude/longitude
+    - `/county_info`: given a county that is queried, returns various mental health stats compiled from .gov data for the county.
+    - `/optimal_centers`: given a list of counties, calculates the new optimal mental health center locations, sorted in a list from best->worst.
+## Running the React App
+- simply change directories into the `second_sem_visualization` folder
+- run `yarn start`!
