@@ -119,6 +119,7 @@ def optimal_centers():
 		response[str(doc.id)] = {}
 		response[str(doc.id)]["details"] = doc.to_dict()
 		response[str(doc.id)]["score"] = score
+	response = {key: value for key, value in sorted(response.items(), key = lambda item: item[1]['score'], reverse=True)}
 	return json.dumps(response)
 
 if __name__ == "__main__":
