@@ -34,12 +34,14 @@ class App extends Component {
       selectedCounty: [],
       selectedCounties: [],
       potentialMentalCenters: [],
-      currMentalCenters: []
+      currMentalCenters: [],
+      optimalCenters: []
     };
     this.setSelectedCounty = this.setSelectedCounty.bind(this);
     this.setSelectedCounties = this.setSelectedCounties.bind(this);
     this.addToSelectedCounties = this.addToSelectedCounties.bind(this);
     this.removeFromSelectedCounties = this.removeFromSelectedCounties.bind(this);
+    this.setOptimalCenters = this.setOptimalCenters.bind(this);
   }
 
   async componentDidMount() {
@@ -53,12 +55,21 @@ class App extends Component {
     this.drawMap();
   }
 
+  componentDidUpdate() {
+    this.drawPotentialCenters();
+    this.drawOptimalCenters();
+  }
+
   setSelectedCounty(county) {
     this.setState({selectedCounty: county});
   }
 
   setSelectedCounties(counties) {
     this.setState({selectedCounties: counties});
+  }
+
+  setOptimalCenters(centers) {
+    this.setState({optimalCenters: centers});
   }
 
   addToSelectedCounties(county) {
@@ -76,6 +87,7 @@ class App extends Component {
   }
 
   drawLegend() {
+    this.drawPotentialCenters();
     const color = d3.scaleQuantize([0, 9], d3.schemeBlues[9]);
     // var quantize = d3
     //   .scaleLinear()
@@ -151,7 +163,8 @@ class App extends Component {
         this.setState({
           selectedCounty: [{
             ...feature,
-            index: parseInt(this.state.classificationData.get(feature.id)) + 1
+            index: parseInt(this.state.classificationData.get(feature.id)) + 1,
+            state: this.state.stateData.get(feature.id.slice(0, 2)).name
           }]
         });
       })
@@ -187,6 +200,45 @@ class App extends Component {
           return projection([d.lon, d.lat])[1] + 30;
         }
       });
+
+    this.drawPotentialCenters();
+  }
+
+  drawOptimalCenters() {
+    // console.log(this.state.optimalCenters);
+    const svg = d3.select('#map');
+    var projection = d3
+      .geoAlbersUsa()
+      .scale(1300)
+      .translate([487.5, 305]);
+
+    const path = d3.geoPath().projection(this.scale(1, 225, 30));
+
+    svg
+      .selectAll('.optimal')
+      .data(this.state.optimalCenters)
+      .enter()
+      .append('circle')
+      .style('stroke', '#ffb8b8')
+      .style('fill', '#ff6b6b')
+      .attr('r', 3)
+      .attr('d', path)
+      .attr('cx', (d) => {
+        return projection([d[1].details.lon, d[1].details.lat])[0] + 225;
+      })
+      .attr('cy', (d) => {
+        return projection([d[1].details.lon, d[1].details.lat])[1] + 30;
+      });
+  }
+
+  drawPotentialCenters() {
+    const svg = d3.select('#map');
+    var projection = d3
+      .geoAlbersUsa()
+      .scale(1300)
+      .translate([487.5, 305]);
+
+    const path = d3.geoPath().projection(this.scale(1, 225, 30));
     
     svg
       .selectAll('.potential')
@@ -207,10 +259,10 @@ class App extends Component {
 
   render() {
     const {selectedCounty, selectedCounties} = this.state;
-    const {setSelectedCounty, setSelectedCounties, addToSelectedCounties, removeFromSelectedCounties } = this;
+    const {setSelectedCounty, setSelectedCounties, addToSelectedCounties, removeFromSelectedCounties, setOptimalCenters } = this;
 
     return (
-      <CountyContext.Provider value={{selectedCounty, setSelectedCounty, selectedCounties, setSelectedCounties, addToSelectedCounties, removeFromSelectedCounties }}>
+      <CountyContext.Provider value={{selectedCounty, setSelectedCounty, selectedCounties, setSelectedCounties, addToSelectedCounties, removeFromSelectedCounties, setOptimalCenters }}>
         <Flex w='100vw' h='100vh' backgroundColor='#ebf3ff' direction='column'>
           <Searchbar />
           {/* <svg id="legend" style={{ height: 230 }}></svg> */}

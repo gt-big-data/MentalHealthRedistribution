@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useContext } from 'react';
 import { Flex, Button, Fade, Box } from '@chakra-ui/react';
 import axios from 'axios';
@@ -9,14 +10,22 @@ const url = 'http://mental-health-redistribution.uc.r.appspot.com';
 
 const Sidebar = () => {
   // eslint-disable-next-line no-unused-vars
-  const { selectedCounties, setSelectedCounties } = useContext(CountyContext);
+  const { selectedCounties, setSelectedCounties, setOptimalCenters } = useContext(CountyContext);
+
+  const sort = (a, b) => {
+    if ( a[1].score < b[1].score ){
+      return -1;
+    }
+    if ( a[1].score > b[1].score ){
+      return 1;
+    }
+    return 0;
+  };
 
   const getOptimalCenters = async () => {
-    const counties = ['Autauga County, Alabama', 'Baldwin County, Alabama'];
-    console.log(selectedCounties);
-    const response = await axios.get(`${url}/optimal_centers?${counties.map((n) => `counties=${n.split(' ').join('%20')}`).join('&')}`);
-
-    console.log(response);
+    const response = await axios.get(`${url}/optimal_centers?${selectedCounties.map((n) => `counties=${n.properties.name}%20County,%20${n.state}`).join('&')}`);
+    const optimalCenters = Object.entries(response.data);
+    setOptimalCenters(optimalCenters.slice(0,10));
   };
 
   return (
@@ -33,7 +42,7 @@ const Sidebar = () => {
           <Button position='absolute' bottom='70px' w='80%' left='50%' transform='translateX(-50%)' backgroundColor='#6AA6FF' color='#fff' onClick={() => {getOptimalCenters();}}>
                 Calculate Optimal Locations
           </Button>
-          <Button position='absolute' bottom='20px' w='80%' left='50%' transform='translateX(-50%)' backgroundColor='#ff7d86' color='#fff' onClick={() => {setSelectedCounties([]);}}>
+          <Button position='absolute' bottom='20px' w='80%' left='50%' transform='translateX(-50%)' backgroundColor='#ff7d86' color='#fff' onClick={() => {setSelectedCounties([]);setOptimalCenters([]);}}>
                 Clear List
           </Button>
         </Flex>
