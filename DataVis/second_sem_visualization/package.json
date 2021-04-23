@@ -19,6 +19,7 @@
     "d3-svg-legend": "^2.25.6",
     "focus-visible": "^5.2.0",
     "framer-motion": "3.10.6",
+    "qs": "^6.10.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.3",
@@ -51,7 +52,7 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^7.21.0",
-    "eslint-plugin-react": "^7.22.0"
+    "eslint-config-prettier": "^8.2.0",
+    "eslint-plugin-prettier": "^3.4.0"
   }
 }

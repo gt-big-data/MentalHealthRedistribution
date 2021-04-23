@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { Component, useContext, useEffect, useState } from 'react';
-import { Heading, ListItem, UnorderedList, Flex, Link, Box, Input, Button, InputRightElement, InputGroup } from '@chakra-ui/react';
+import { Heading, ListItem, UnorderedList, Flex, Link, Box, Input, Button, InputRightElement, InputGroup, Spinner, Center } from '@chakra-ui/react';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 import d3Legend from 'd3-svg-legend';
 import * as d3 from 'd3';
@@ -15,12 +15,15 @@ import axios from 'axios';
 // } from 'react-simple-maps';
 
 import Sidebar from './Sidebar';
+import CountyListSidebar from './CountyListSidebar';
 
 import countyData from '../data/us.json';
 import geojsonData from '../data/usGeojson.json';
 import csvData from '../data/data.csv';
 import Searchbar from './Searchbar';
 import { CountyContext } from '../contexts';
+
+const url = 'http://mental-health-redistribution.uc.r.appspot.com';
 
 class App extends Component {
   constructor() {
@@ -29,16 +32,22 @@ class App extends Component {
       classificationData: new Map(),
       stateData: new Map(),
       selectedCounty: [],
+      selectedCounties: [],
       potentialMentalCenters: [],
-      currMentalCenters: []
+      currMentalCenters: [],
+      optimalCenters: []
     };
     this.setSelectedCounty = this.setSelectedCounty.bind(this);
+    this.setSelectedCounties = this.setSelectedCounties.bind(this);
+    this.addToSelectedCounties = this.addToSelectedCounties.bind(this);
+    this.removeFromSelectedCounties = this.removeFromSelectedCounties.bind(this);
+    this.setOptimalCenters = this.setOptimalCenters.bind(this);
   }
 
   async componentDidMount() {
     const getData = async () => {
-      const currData = await axios.get('http://127.0.0.1:5000/current_mental_health_centers');
-      const potentialData = await axios.get('http://127.0.0.1:5000/potential_mental_health_centers');
+      const currData = await axios.get(`${url}/current_mental_health_centers`);
+      const potentialData = await axios.get(`${url}/potential_mental_health_centers`);
       this.setState({potentialMentalCenters: potentialData.data, currMentalCenters: currData.data});
     };
     await getData();
@@ -46,11 +55,39 @@ class App extends Component {
     this.drawMap();
   }
 
+  componentDidUpdate() {
+    this.drawPotentialCenters();
+    this.drawOptimalCenters();
+  }
+
   setSelectedCounty(county) {
     this.setState({selectedCounty: county});
   }
 
+  setSelectedCounties(counties) {
+    this.setState({selectedCounties: counties});
+  }
+
+  setOptimalCenters(centers) {
+    this.setState({optimalCenters: centers});
+  }
+
+  addToSelectedCounties(county) {
+    let counties = this.state.selectedCounties;
+    if (!counties.includes(county)) {
+      counties.push(county);
+    }
+    this.setState({selectedCounties: counties});
+  }
+
+  removeFromSelectedCounties(county) {
+    let counties = this.state.selectedCounties;
+    counties.splice(counties.indexOf(county), 1);
+    this.setState({ selectedCounties: counties });
+  }
+
   drawLegend() {
+    this.drawPotentialCenters();
     const color = d3.scaleQuantize([0, 9], d3.schemeBlues[9]);
     // var quantize = d3
     //   .scaleLinear()
@@ -126,7 +163,8 @@ class App extends Component {
         this.setState({
           selectedCounty: [{
             ...feature,
-            index: parseInt(this.state.classificationData.get(feature.id)) + 1
+            index: parseInt(this.state.classificationData.get(feature.id)) + 1,
+            state: this.state.stateData.get(feature.id.slice(0, 2)).name
           }]
         });
       })
@@ -162,6 +200,45 @@ class App extends Component {
           return projection([d.lon, d.lat])[1] + 30;
         }
       });
+
+    this.drawPotentialCenters();
+  }
+
+  drawOptimalCenters() {
+    // console.log(this.state.optimalCenters);
+    const svg = d3.select('#map');
+    var projection = d3
+      .geoAlbersUsa()
+      .scale(1300)
+      .translate([487.5, 305]);
+
+    const path = d3.geoPath().projection(this.scale(1, 225, 30));
+
+    svg
+      .selectAll('.optimal')
+      .data(this.state.optimalCenters)
+      .enter()
+      .append('circle')
+      .style('stroke', '#ffb8b8')
+      .style('fill', '#fc4949')
+      .attr('r', 4)
+      .attr('d', path)
+      .attr('cx', (d) => {
+        return projection([d[1].details.lon, d[1].details.lat])[0] + 225;
+      })
+      .attr('cy', (d) => {
+        return projection([d[1].details.lon, d[1].details.lat])[1] + 30;
+      });
+  }
+
+  drawPotentialCenters() {
+    const svg = d3.select('#map');
+    var projection = d3
+      .geoAlbersUsa()
+      .scale(1300)
+      .translate([487.5, 305]);
+
+    const path = d3.geoPath().projection(this.scale(1, 225, 30));
     
     svg
       .selectAll('.potential')
@@ -181,16 +258,17 @@ class App extends Component {
   }
 
   render() {
-    const {selectedCounty} = this.state;
-    const {setSelectedCounty} = this;
+    const {selectedCounty, selectedCounties} = this.state;
+    const {setSelectedCounty, setSelectedCounties, addToSelectedCounties, removeFromSelectedCounties, setOptimalCenters } = this;
 
     return (
-      <CountyContext.Provider value={{selectedCounty, setSelectedCounty}}>
+      <CountyContext.Provider value={{selectedCounty, setSelectedCounty, selectedCounties, setSelectedCounties, addToSelectedCounties, removeFromSelectedCounties, setOptimalCenters }}>
         <Flex w='100vw' h='100vh' backgroundColor='#ebf3ff' direction='column'>
-          <Searchbar />
+          {/* <Searchbar /> */}
           {/* <svg id="legend" style={{ height: 230 }}></svg> */}
-          <svg id="map" style={{ width: '100vw', height: '100vh', marginBottom: 30 }}></svg>
+          {this.state.potentialMentalCenters.length === 0 && this.state.currMentalCenters.length === 0 ? <Spinner position='absolute' top='50%' left='50%' transform='translate(-50%, -50%)' size='xl' color="#6AA6FF"/> : <svg id="map" style={{ width: '100vw', height: '100vh', marginBottom: 30 }}></svg>}
           <Sidebar />
+          <CountyListSidebar />
         </Flex>
       </CountyContext.Provider>
     );
