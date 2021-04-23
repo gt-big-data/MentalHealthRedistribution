@@ -220,8 +220,8 @@ class App extends Component {
       .enter()
       .append('circle')
       .style('stroke', '#ffb8b8')
-      .style('fill', '#ff6b6b')
-      .attr('r', 3)
+      .style('fill', '#fc4949')
+      .attr('r', 4)
       .attr('d', path)
       .attr('cx', (d) => {
         return projection([d[1].details.lon, d[1].details.lat])[0] + 225;
@@ -264,7 +264,7 @@ class App extends Component {
     return (
       <CountyContext.Provider value={{selectedCounty, setSelectedCounty, selectedCounties, setSelectedCounties, addToSelectedCounties, removeFromSelectedCounties, setOptimalCenters }}>
         <Flex w='100vw' h='100vh' backgroundColor='#ebf3ff' direction='column'>
-          <Searchbar />
+          {/* <Searchbar /> */}
           {/* <svg id="legend" style={{ height: 230 }}></svg> */}
           {this.state.potentialMentalCenters.length === 0 && this.state.currMentalCenters.length === 0 ? <Spinner position='absolute' top='50%' left='50%' transform='translate(-50%, -50%)' size='xl' color="#6AA6FF"/> : <svg id="map" style={{ width: '100vw', height: '100vh', marginBottom: 30 }}></svg>}
           <Sidebar />
